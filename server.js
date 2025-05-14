@@ -12,15 +12,11 @@ app.use(bodyParser.json());
 const gmailUser = process.env.GMAIL_USER;
 const gmailPass = process.env.GMAIL_PASS;
 
-console.log("GMAIL_USER:", gmailUser);
-console.log("GMAIL_PASS:", gmailPass ? "Loaded" : "Not loaded");
-
 app.get("/", (req, res) => {
   res.send("✅ Techtra API is working on Vercel!");
 });
 
 app.post("/contact", async (req, res) => {
-  console.log("Request Body:", req.body);
   const { name, email, message } = req.body;
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -29,14 +25,12 @@ app.post("/contact", async (req, res) => {
       pass: gmailPass,
     },
   });
-
   const mailOptions = {
     from: email,
     to: gmailUser,
     subject: `Message from ${name}`,
     text: message,
   };
-
   try {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ success: true, message: "Message sent" });
